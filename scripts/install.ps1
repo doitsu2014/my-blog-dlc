@@ -1,0 +1,101 @@
+# scripts/install.ps1 — install the my-blog-dlc command on Windows.
+#
+# Usage:
+#   ./scripts/install.ps1 [-From <dir>] [-Prefix <dir>] [-BinDir <dir>]
+#                         [-Version <x.y.z>] [-Uninstall] [-NoCompletion] [-Quiet]
+
+param(
+  [string]$From = "",
+  [string]$Prefix = "",
+  [string]$BinDir = "",
+  [string]$Version = "",
+  [switch]$Uninstall,
+  [switch]$NoCompletion,
+  [switch]$Quiet
+)
+
+$ErrorActionPreference = "Stop"
+
+function Say($Message) { if (-not $Quiet) { Write-Host $Message } }
+function Die($Message) { Write-Error "ERROR $Message"; exit 1 }
+
+if (-not $Prefix) {
+  $Prefix = if ($env:MY_BLOG_DLC_INSTALL_ROOT) { $env:MY_BLOG_DLC_INSTALL_ROOT }
+            else { Join-Path $env:LOCALAPPDATA "my-blog-dlc" }
+}
+if (-not $BinDir) {
+  $BinDir = if ($env:MY_BLOG_DLC_BIN_DIR) { $env:MY_BLOG_DLC_BIN_DIR }
+            else { Join-Path $env:LOCALAPPDATA "my-blog-dlc\bin" }
+}
+
+if ($Uninstall) {
+  $engine = Join-Path $Prefix "core\tools\my-blog-dlc.mjs"
+  if (Test-Path $engine) {
+    try {
+      $env:MY_BLOG_DLC_HOME = $Prefix
+      & node $engine completion uninstall --shell powershell 2>$null | Out-Null
+    } catch {}
+  }
+  $launcher = Join-Path $BinDir "my-blog-dlc.cmd"
+  if (Test-Path $launcher) { Remove-Item $launcher -Force }
+  if (Test-Path $Prefix) { Remove-Item $Prefix -Recurse -Force }
+  Say "Removed my-blog-dlc."
+  exit 0
+}
+
+if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
+  Die "Node.js 20+ is required but 'node' was not found."
+}
+
+$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+if (-not $From) {
+  $candidate = Split-Path -Parent $scriptDir
+  if ((Test-Path (Join-Path $candidate "package.json")) -and (Test-Path (Join-Path $candidate "core"))) {
+    $From = $candidate
+  }
+}
+if (-not $From) { Die "no local source found; pass -From <dir> or -Version <x.y.z>" }
+if (-not (Test-Path (Join-Path $From "package.json"))) { Die "$From is not a my-blog-dlc source tree" }
+if (-not (Test-Path (Join-Path $From "core"))) { Die "$From is missing core/" }
+
+Say "Installing my-blog-dlc from $From"
+if (Test-Path $Prefix) { Remove-Item $Prefix -Recurse -Force }
+New-Item -ItemType Directory -Path $Prefix -Force | Out-Null
+foreach ($item in @("core", "harness", "scripts", "package.json", "README.md", "LICENSE")) {
+  $source = Join-Path $From $item
+  if (Test-Path $source) {
+    Copy-Item $source -Destination $Prefix -Recurse -Force
+  }
+}
+
+New-Item -ItemType Directory -Path $BinDir -Force | Out-Null
+$launcher = Join-Path $BinDir "my-blog-dlc.cmd"
+@"
+@echo off
+set MY_BLOG_DLC_HOME=$Prefix
+node "%MY_BLOG_DLC_HOME%\core\tools\my-blog-dlc.mjs" %*
+"@ | Set-Content -Path $launcher -Encoding ASCII
+
+$userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+if ($userPath -notlike "*$BinDir*") {
+  [Environment]::SetEnvironmentVariable("Path", "$userPath;$BinDir", "User")
+  Say "Added $BinDir to the user PATH. Open a new terminal."
+}
+
+$installed = (Get-Content (Join-Path $Prefix "package.json") | ConvertFrom-Json).version
+Say "PASS installed my-blog-dlc $installed"
+
+if (-not $NoCompletion) {
+  $engine = Join-Path $Prefix "core\tools\my-blog-dlc.mjs"
+  if (Test-Path $engine) {
+    try {
+      $env:MY_BLOG_DLC_HOME = $Prefix
+      & node $engine completion install --shell powershell | Out-Null
+      Say "PASS installed PowerShell completion (restart your shell to activate)"
+    } catch {
+      Say "note: PowerShell completion was not installed; run 'my-blog-dlc completion install'"
+    }
+  }
+}
+
+Say "Next: my-blog-dlc config --harness pi"

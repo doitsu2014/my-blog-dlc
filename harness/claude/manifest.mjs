@@ -1,0 +1,41 @@
+// harness/claude/manifest.mjs — the Claude Code distribution row.
+//
+// Projects core/ into dist/claude/.claude/ and ships the ambient method import
+// at .claude/rules/blogdlc.md. Claude discovers skills under .claude/skills/ and
+// reads CLAUDE.md as its always-on context file.
+
+const manifest = {
+  name: "claude",
+  productName: "Claude Code",
+  harnessDir: ".claude",
+  invoke: "/blogdlc",
+  configNextStep: "open Claude Code in this project and run `/blogdlc --doctor`",
+  orchestratorSkillPath: ".claude/skills/blogdlc/SKILL.md",
+
+  coreDirs: [
+    { src: "tools", dst: "tools" },
+    { src: "phases", dst: "phases" },
+    { src: "agents", dst: "agents" },
+    { src: "scopes", dst: "scopes" },
+    { src: "protocols", dst: "protocols" },
+    { src: "knowledge", dst: "knowledge" },
+    // Native skill directory: the orchestrator skill and the reference skills.
+    { src: "skills", dst: "skills" },
+  ],
+
+  coreFiles: [],
+
+  harnessFiles: [
+    { src: "rules-blogdlc.md", dst: "rules/blogdlc.md" },
+    { src: "settings.json", dst: "settings.json" },
+    { src: "settings.local.json.example", dst: "settings.local.json.example" },
+  ],
+
+  projectFiles: [{ src: "dot-gitignore", dst: ".gitignore" }],
+
+  coreProjectFiles: [],
+
+  onboarding: { src: "onboarding.md", dst: "CLAUDE.md", projectRoot: true },
+};
+
+export default manifest;

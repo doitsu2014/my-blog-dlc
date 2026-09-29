@@ -1,0 +1,1011 @@
+{
+  "phases": [
+    {
+      "slug": "discover",
+      "name": "Discover",
+      "order": 1,
+      "focus": "Topic and audience",
+      "aiRole": "Research assistant",
+      "output": "Content brief, audience profile, research notes"
+    },
+    {
+      "slug": "outline",
+      "name": "Outline",
+      "order": 2,
+      "focus": "Angle and structure",
+      "aiRole": "Thinking partner",
+      "output": "Angle statement, outline, headline options, hook"
+    },
+    {
+      "slug": "draft",
+      "name": "Draft",
+      "order": 3,
+      "focus": "Writing",
+      "aiRole": "Writing partner",
+      "output": "Draft, code samples, asset plan"
+    },
+    {
+      "slug": "refine",
+      "name": "Refine",
+      "order": 4,
+      "focus": "Editing and verification",
+      "aiRole": "Editor",
+      "output": "Developmental review, fact-check report, final draft"
+    },
+    {
+      "slug": "publish",
+      "name": "Publish",
+      "order": 5,
+      "focus": "Release and distribution",
+      "aiRole": "Publishing assistant",
+      "output": "SEO metadata, packaged post, promotion plan"
+    },
+    {
+      "slug": "evolve",
+      "name": "Evolve",
+      "order": 6,
+      "focus": "Measurement and improvement",
+      "aiRole": "Content analyst",
+      "output": "Performance report, refresh plan, repurposed content"
+    }
+  ],
+  "stages": [
+    {
+      "slug": "audience-analysis",
+      "name": "Audience Analysis",
+      "phase": "discover",
+      "execution": "ALWAYS",
+      "leadAgent": "audience-analyst-agent",
+      "supportAgents": [
+        "content-strategist-agent"
+      ],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "audience-profile"
+      ],
+      "consumes": [
+        {
+          "artifact": "content-brief",
+          "required": true
+        }
+      ],
+      "requiresStage": [
+        "brief-capture"
+      ]
+    },
+    {
+      "slug": "brief-capture",
+      "name": "Brief Capture",
+      "phase": "discover",
+      "execution": "ALWAYS",
+      "leadAgent": "content-strategist-agent",
+      "supportAgents": [],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "content-brief",
+        "brief-questions"
+      ],
+      "consumes": [],
+      "requiresStage": []
+    },
+    {
+      "slug": "keyword-research",
+      "name": "Keyword Research",
+      "phase": "discover",
+      "execution": "CONDITIONAL",
+      "leadAgent": "seo-agent",
+      "supportAgents": [
+        "audience-analyst-agent"
+      ],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "keyword-map"
+      ],
+      "consumes": [
+        {
+          "artifact": "content-brief",
+          "required": true
+        },
+        {
+          "artifact": "audience-profile",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "brief-capture",
+        "audience-analysis",
+        "topic-research"
+      ]
+    },
+    {
+      "slug": "topic-research",
+      "name": "Topic Research",
+      "phase": "discover",
+      "execution": "CONDITIONAL",
+      "leadAgent": "research-agent",
+      "supportAgents": [
+        "fact-checker-agent"
+      ],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "research-notes",
+        "source-register"
+      ],
+      "consumes": [
+        {
+          "artifact": "content-brief",
+          "required": true
+        },
+        {
+          "artifact": "audience-profile",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "brief-capture"
+      ]
+    },
+    {
+      "slug": "code-examples",
+      "name": "Code Examples",
+      "phase": "draft",
+      "execution": "CONDITIONAL",
+      "leadAgent": "technical-author-agent",
+      "supportAgents": [
+        "technical-reviewer-agent"
+      ],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "code-samples",
+        "code-verification-log"
+      ],
+      "consumes": [
+        {
+          "artifact": "draft",
+          "required": true
+        },
+        {
+          "artifact": "outline",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "first-draft"
+      ]
+    },
+    {
+      "slug": "first-draft",
+      "name": "First Draft",
+      "phase": "draft",
+      "execution": "ALWAYS",
+      "leadAgent": "writer-agent",
+      "supportAgents": [],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "draft",
+        "draft-notes"
+      ],
+      "consumes": [
+        {
+          "artifact": "content-brief",
+          "required": true
+        },
+        {
+          "artifact": "outline",
+          "required": false
+        },
+        {
+          "artifact": "angle-statement",
+          "required": false
+        },
+        {
+          "artifact": "headline-options",
+          "required": false
+        },
+        {
+          "artifact": "hook",
+          "required": false
+        },
+        {
+          "artifact": "audience-profile",
+          "required": false
+        },
+        {
+          "artifact": "research-notes",
+          "required": false
+        },
+        {
+          "artifact": "source-register",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "brief-capture",
+        "structure-outline",
+        "headline-and-hook"
+      ]
+    },
+    {
+      "slug": "visual-assets",
+      "name": "Visual Assets",
+      "phase": "draft",
+      "execution": "CONDITIONAL",
+      "leadAgent": "visual-designer-agent",
+      "supportAgents": [],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "asset-plan"
+      ],
+      "consumes": [
+        {
+          "artifact": "draft",
+          "required": true
+        },
+        {
+          "artifact": "outline",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "first-draft"
+      ]
+    },
+    {
+      "slug": "content-refresh",
+      "name": "Content Refresh",
+      "phase": "evolve",
+      "execution": "CONDITIONAL",
+      "leadAgent": "content-strategist-agent",
+      "supportAgents": [
+        "analytics-agent",
+        "fact-checker-agent"
+      ],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "refresh-plan"
+      ],
+      "consumes": [
+        {
+          "artifact": "performance-report",
+          "required": false
+        },
+        {
+          "artifact": "final-draft",
+          "required": false
+        },
+        {
+          "artifact": "publish-record",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "performance-review"
+      ]
+    },
+    {
+      "slug": "performance-review",
+      "name": "Performance Review",
+      "phase": "evolve",
+      "execution": "ALWAYS",
+      "leadAgent": "analytics-agent",
+      "supportAgents": [
+        "seo-agent"
+      ],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "performance-report"
+      ],
+      "consumes": [
+        {
+          "artifact": "content-brief",
+          "required": false
+        },
+        {
+          "artifact": "publish-record",
+          "required": false
+        },
+        {
+          "artifact": "seo-metadata",
+          "required": false
+        },
+        {
+          "artifact": "keyword-map",
+          "required": false
+        },
+        {
+          "artifact": "promotion-plan",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "publish-package",
+        "promotion-plan"
+      ]
+    },
+    {
+      "slug": "repurposing",
+      "name": "Repurposing",
+      "phase": "evolve",
+      "execution": "CONDITIONAL",
+      "leadAgent": "distribution-agent",
+      "supportAgents": [
+        "copywriter-agent"
+      ],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "repurposed-content"
+      ],
+      "consumes": [
+        {
+          "artifact": "content-brief",
+          "required": true
+        },
+        {
+          "artifact": "final-draft",
+          "required": false
+        },
+        {
+          "artifact": "audience-profile",
+          "required": false
+        },
+        {
+          "artifact": "performance-report",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "brief-capture",
+        "performance-review"
+      ]
+    },
+    {
+      "slug": "angle-definition",
+      "name": "Angle Definition",
+      "phase": "outline",
+      "execution": "ALWAYS",
+      "leadAgent": "content-strategist-agent",
+      "supportAgents": [
+        "audience-analyst-agent"
+      ],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "angle-statement"
+      ],
+      "consumes": [
+        {
+          "artifact": "content-brief",
+          "required": true
+        },
+        {
+          "artifact": "audience-profile",
+          "required": false
+        },
+        {
+          "artifact": "research-notes",
+          "required": false
+        },
+        {
+          "artifact": "keyword-map",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "brief-capture",
+        "audience-analysis",
+        "topic-research",
+        "keyword-research"
+      ]
+    },
+    {
+      "slug": "headline-and-hook",
+      "name": "Headline and Hook",
+      "phase": "outline",
+      "execution": "ALWAYS",
+      "leadAgent": "copywriter-agent",
+      "supportAgents": [
+        "seo-agent"
+      ],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "headline-options",
+        "hook"
+      ],
+      "consumes": [
+        {
+          "artifact": "angle-statement",
+          "required": true
+        },
+        {
+          "artifact": "outline",
+          "required": true
+        },
+        {
+          "artifact": "keyword-map",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "structure-outline"
+      ]
+    },
+    {
+      "slug": "structure-outline",
+      "name": "Structure Outline",
+      "phase": "outline",
+      "execution": "ALWAYS",
+      "leadAgent": "outline-architect-agent",
+      "supportAgents": [
+        "developmental-editor-agent"
+      ],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "outline",
+        "outline-questions"
+      ],
+      "consumes": [
+        {
+          "artifact": "angle-statement",
+          "required": true
+        },
+        {
+          "artifact": "content-brief",
+          "required": true
+        },
+        {
+          "artifact": "research-notes",
+          "required": false
+        },
+        {
+          "artifact": "keyword-map",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "angle-definition"
+      ]
+    },
+    {
+      "slug": "promotion-plan",
+      "name": "Promotion Plan",
+      "phase": "publish",
+      "execution": "CONDITIONAL",
+      "leadAgent": "distribution-agent",
+      "supportAgents": [
+        "copywriter-agent"
+      ],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "promotion-plan",
+        "social-copy"
+      ],
+      "consumes": [
+        {
+          "artifact": "final-draft",
+          "required": true
+        },
+        {
+          "artifact": "publish-record",
+          "required": false
+        },
+        {
+          "artifact": "audience-profile",
+          "required": false
+        },
+        {
+          "artifact": "headline-options",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "publish-package"
+      ]
+    },
+    {
+      "slug": "publish-package",
+      "name": "Publish Package",
+      "phase": "publish",
+      "execution": "ALWAYS",
+      "leadAgent": "publisher-agent",
+      "supportAgents": [],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "publish-record"
+      ],
+      "consumes": [
+        {
+          "artifact": "final-draft",
+          "required": true
+        },
+        {
+          "artifact": "seo-metadata",
+          "required": false
+        },
+        {
+          "artifact": "asset-plan",
+          "required": false
+        },
+        {
+          "artifact": "code-samples",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "copy-edit",
+        "seo-optimization"
+      ]
+    },
+    {
+      "slug": "seo-optimization",
+      "name": "SEO Optimization",
+      "phase": "publish",
+      "execution": "ALWAYS",
+      "leadAgent": "seo-agent",
+      "supportAgents": [
+        "copywriter-agent"
+      ],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "seo-metadata"
+      ],
+      "consumes": [
+        {
+          "artifact": "final-draft",
+          "required": true
+        },
+        {
+          "artifact": "keyword-map",
+          "required": false
+        },
+        {
+          "artifact": "headline-options",
+          "required": false
+        },
+        {
+          "artifact": "asset-plan",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "copy-edit"
+      ]
+    },
+    {
+      "slug": "copy-edit",
+      "name": "Copy Edit",
+      "phase": "refine",
+      "execution": "ALWAYS",
+      "leadAgent": "copy-editor-agent",
+      "supportAgents": [],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "final-draft",
+        "copy-edit-notes"
+      ],
+      "consumes": [
+        {
+          "artifact": "draft",
+          "required": true
+        },
+        {
+          "artifact": "developmental-review",
+          "required": false
+        },
+        {
+          "artifact": "fact-check-report",
+          "required": false
+        },
+        {
+          "artifact": "headline-options",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "first-draft",
+        "developmental-edit",
+        "fact-check"
+      ]
+    },
+    {
+      "slug": "developmental-edit",
+      "name": "Developmental Edit",
+      "phase": "refine",
+      "execution": "ALWAYS",
+      "leadAgent": "developmental-editor-agent",
+      "supportAgents": [
+        "audience-analyst-agent"
+      ],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "developmental-review"
+      ],
+      "consumes": [
+        {
+          "artifact": "draft",
+          "required": true
+        },
+        {
+          "artifact": "content-brief",
+          "required": true
+        },
+        {
+          "artifact": "angle-statement",
+          "required": false
+        },
+        {
+          "artifact": "outline",
+          "required": false
+        },
+        {
+          "artifact": "audience-profile",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "first-draft",
+        "code-examples",
+        "visual-assets"
+      ]
+    },
+    {
+      "slug": "fact-check",
+      "name": "Fact Check",
+      "phase": "refine",
+      "execution": "ALWAYS",
+      "leadAgent": "fact-checker-agent",
+      "supportAgents": [
+        "research-agent"
+      ],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "fact-check-report"
+      ],
+      "consumes": [
+        {
+          "artifact": "draft",
+          "required": true
+        },
+        {
+          "artifact": "source-register",
+          "required": false
+        },
+        {
+          "artifact": "research-notes",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "developmental-edit",
+        "technical-review"
+      ]
+    },
+    {
+      "slug": "technical-review",
+      "name": "Technical Review",
+      "phase": "refine",
+      "execution": "CONDITIONAL",
+      "leadAgent": "technical-reviewer-agent",
+      "supportAgents": [
+        "technical-author-agent"
+      ],
+      "mode": "inline",
+      "reviewer": null,
+      "produces": [
+        "technical-review-record"
+      ],
+      "consumes": [
+        {
+          "artifact": "draft",
+          "required": true
+        },
+        {
+          "artifact": "code-samples",
+          "required": false
+        },
+        {
+          "artifact": "code-verification-log",
+          "required": false
+        }
+      ],
+      "requiresStage": [
+        "developmental-edit",
+        "code-examples"
+      ]
+    }
+  ],
+  "scopes": [
+    {
+      "name": "classic",
+      "depth": "Standard",
+      "keywords": [],
+      "phases": [
+        "discover",
+        "outline",
+        "draft",
+        "refine",
+        "publish",
+        "evolve"
+      ],
+      "skip": []
+    },
+    {
+      "name": "deep-dive",
+      "depth": "Comprehensive",
+      "keywords": [
+        "deep dive",
+        "deep-dive",
+        "analysis",
+        "explainer",
+        "investigation",
+        "long-form",
+        "long form",
+        "comparison",
+        "benchmark",
+        "research"
+      ],
+      "phases": [
+        "discover",
+        "outline",
+        "draft",
+        "refine",
+        "publish"
+      ],
+      "skip": []
+    },
+    {
+      "name": "opinion",
+      "depth": "Standard",
+      "keywords": [
+        "opinion",
+        "essay",
+        "thoughts on",
+        "reflection",
+        "perspective",
+        "hot take",
+        "personal",
+        "story",
+        "lessons learned",
+        "retrospective"
+      ],
+      "phases": [
+        "discover",
+        "outline",
+        "draft",
+        "refine",
+        "publish"
+      ],
+      "skip": [
+        "topic-research",
+        "keyword-research",
+        "code-examples",
+        "visual-assets",
+        "technical-review"
+      ]
+    },
+    {
+      "name": "quick",
+      "depth": "Minimal",
+      "keywords": [
+        "quick",
+        "short",
+        "til",
+        "today i learned",
+        "note",
+        "snippet",
+        "tiny",
+        "express"
+      ],
+      "phases": [
+        "discover",
+        "draft",
+        "refine",
+        "publish"
+      ],
+      "skip": [
+        "audience-analysis",
+        "topic-research",
+        "keyword-research",
+        "code-examples",
+        "visual-assets",
+        "developmental-edit",
+        "technical-review",
+        "fact-check",
+        "seo-optimization",
+        "promotion-plan"
+      ]
+    },
+    {
+      "name": "refresh",
+      "depth": "Minimal",
+      "keywords": [
+        "refresh",
+        "update",
+        "revise",
+        "rewrite",
+        "outdated",
+        "correction",
+        "erratum",
+        "typo",
+        "fix post"
+      ],
+      "phases": [
+        "discover",
+        "draft",
+        "refine",
+        "publish"
+      ],
+      "skip": [
+        "audience-analysis",
+        "topic-research",
+        "code-examples",
+        "visual-assets",
+        "developmental-edit",
+        "technical-review",
+        "promotion-plan"
+      ]
+    },
+    {
+      "name": "repurpose",
+      "depth": "Minimal",
+      "keywords": [
+        "repurpose",
+        "thread",
+        "newsletter",
+        "linkedin",
+        "cross-post",
+        "crosspost",
+        "syndicate",
+        "social post",
+        "talk outline"
+      ],
+      "phases": [
+        "discover",
+        "evolve"
+      ],
+      "skip": [
+        "topic-research",
+        "keyword-research",
+        "performance-review",
+        "content-refresh"
+      ]
+    },
+    {
+      "name": "tutorial",
+      "depth": "Standard",
+      "keywords": [
+        "tutorial",
+        "how to",
+        "how-to",
+        "guide",
+        "walkthrough",
+        "step by step",
+        "step-by-step",
+        "getting started",
+        "setup",
+        "install"
+      ],
+      "phases": [
+        "discover",
+        "outline",
+        "draft",
+        "refine",
+        "publish"
+      ],
+      "skip": []
+    }
+  ],
+  "scopeGrid": {
+    "classic": [
+      "brief-capture",
+      "audience-analysis",
+      "topic-research",
+      "keyword-research",
+      "angle-definition",
+      "structure-outline",
+      "headline-and-hook",
+      "first-draft",
+      "code-examples",
+      "visual-assets",
+      "developmental-edit",
+      "technical-review",
+      "fact-check",
+      "copy-edit",
+      "seo-optimization",
+      "publish-package",
+      "promotion-plan",
+      "performance-review",
+      "content-refresh",
+      "repurposing"
+    ],
+    "deep-dive": [
+      "brief-capture",
+      "audience-analysis",
+      "topic-research",
+      "keyword-research",
+      "angle-definition",
+      "structure-outline",
+      "headline-and-hook",
+      "first-draft",
+      "code-examples",
+      "visual-assets",
+      "developmental-edit",
+      "technical-review",
+      "fact-check",
+      "copy-edit",
+      "seo-optimization",
+      "publish-package",
+      "promotion-plan"
+    ],
+    "opinion": [
+      "brief-capture",
+      "audience-analysis",
+      "angle-definition",
+      "structure-outline",
+      "headline-and-hook",
+      "first-draft",
+      "developmental-edit",
+      "fact-check",
+      "copy-edit",
+      "seo-optimization",
+      "publish-package",
+      "promotion-plan"
+    ],
+    "quick": [
+      "brief-capture",
+      "first-draft",
+      "copy-edit",
+      "publish-package"
+    ],
+    "refresh": [
+      "brief-capture",
+      "keyword-research",
+      "first-draft",
+      "fact-check",
+      "copy-edit",
+      "seo-optimization",
+      "publish-package"
+    ],
+    "repurpose": [
+      "brief-capture",
+      "audience-analysis",
+      "repurposing"
+    ],
+    "tutorial": [
+      "brief-capture",
+      "audience-analysis",
+      "topic-research",
+      "keyword-research",
+      "angle-definition",
+      "structure-outline",
+      "headline-and-hook",
+      "first-draft",
+      "code-examples",
+      "visual-assets",
+      "developmental-edit",
+      "technical-review",
+      "fact-check",
+      "copy-edit",
+      "seo-optimization",
+      "publish-package",
+      "promotion-plan"
+    ]
+  }
+}

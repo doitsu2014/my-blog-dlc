@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Edit",
+      "Write",
+      "Glob",
+      "Grep",
+      "Task",
+      "WebSearch",
+      "WebFetch",
+      "Bash(node:*)",
+      "Bash(my-blog-dlc:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(date -u:*)"
+    ]
+  }
+}

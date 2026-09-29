@@ -1,0 +1,5 @@
+# my-blog-dlc workspace runtime
+blogdlc/.my-blog-dlc-sessions/
+blogdlc/config.local.json
+blogdlc/spaces/*/.active-space
+blogdlc/spaces/*/intents/*/.active-intent
